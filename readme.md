@@ -3,11 +3,11 @@
 
 ## About The Project
 
-This is a messenger app that i made using laravel and Vue js.
+This is a messenger app that i made using laravel and Vue js with efficient handling of message notification.
 
 ### Features:
-- Frontend: Vue.js and Backend: Laravel
-- Use of Laravel Echo and Pusher for handling message notificatification
+- Backend Framework: Laravel || Frontend Framework: Vue || Frontend Template: Admin LTE  
+- Use of Laravel Echo and Pusher for handling message notification
 - Totally Based on APIs
 - API security using Laravel Passport
 - Use of JWT (JSON Web Token) for Laravel Authentication
