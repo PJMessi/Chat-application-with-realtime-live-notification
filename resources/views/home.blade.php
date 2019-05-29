@@ -1,4 +1,4 @@
-@extends('layouts.chat')
+{{-- @extends('layouts.app')
 
 @section('content')
 <div class="container">
@@ -20,4 +20,21 @@
         </div>
     </div>
 </div>
+@endsection --}}
+
+@extends('Layouts.master')
+@section('content')
+
+<div class="page-wrapper">
+
+    <conversation :user="{{auth()->user()}}"></conversation>
+
+    {{-- <footer class="footer text-center">
+        All Rights Reserved by AdminBite admin. Designed and Developed by
+        <a href="https://wrappixel.com">WrapPixel</a>.
+    </footer> --}}
+    
+</div>
+
+
 @endsection

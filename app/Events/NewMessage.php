@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use App\Message;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -10,6 +9,7 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use App\Message;
 
 class NewMessage implements ShouldBroadcast
 {
@@ -32,10 +32,11 @@ class NewMessage implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('messages_' . $this->message->to );
+        return new PrivateChannel('message_' . $this->message->to);
     }
 
     public function broadcastWith() {
+        $this->message->load('fromContact');
         return ["message" => $this->message];
     }
 }

@@ -4,45 +4,53 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+
 use App\User;
 use App\Message;
+
 use App\Events\NewMessage;
 
 class ContactController extends Controller
 {
-    public function getContacts() {
-        $current_user_id = auth('api')->user()->id;
+    public function fetchContacts() {
+        $contacts = User::where('id', '!=', auth('api')->user()->id)->orderBy('name')->get();
 
-        $users = User::where('id', '!=', $current_user_id)->orderBy("created_at", "desc")->get();
-        return response()->json($users);
+        $unreadIds = Message::select(\DB::raw('`from` as sender_id, count(`from`) as messages_count'))
+            ->where('to', auth('api')->user()->id)
+            ->where('read', false)
+            ->groupBy('from')
+            ->get();
+
+            $contacts = $contacts->map(function($contact) use ($unreadIds) {
+                $contactUnread = $unreadIds->where('sender_id', $contact->id)->first();
+                $contact->unread = $contactUnread ? $contactUnread->messages_count : 0;
+                return $contact;
+            });
+        return response()->json($contacts);
     }
 
-    public function getMessages($id) {
-        $current_user_id = auth('api')->user()->id;
-        // $current_user_id = 19;
-        // $id = 6;
-
-        $messages = Message::where(function($q) use ($id, $current_user_id){
-            $q->where('to', $id)->where('from', $current_user_id);
+    public function fetchMessages($id) {
+        Message::where('from', $id)->where('to', auth('api')->user()->id)->update(['read' => true]);
+        $messages = Message::where(function($query) use ($id){
+            $query->where('to', $id)->where('from', auth('api')->user()->id);
         })
-        ->orWhere(function($q) use ($id, $current_user_id){
-            $q->where('to', $current_user_id)->where('from', $id);
+        ->orWhere(function($query) use ($id) {
+            $query->where('from', $id)->where('to', auth('api')->user()->id);
         })
         ->get();
 
         return response()->json($messages);
     }
 
-    public function saveMessage(Request $request) {
+    public function sendMessage(Request $request) {
         $message = new Message();
-        $message->from = auth('api')->user()->id;
         $message->to = $request["receiver_id"];
-        $message->text = $request["messageContent"];
+        $message->from = auth('api')->user()->id;
+        $message->text = $request["message_content"];
         $message->save();
+        
         broadcast(new NewMessage($message));
 
-       
         return response()->json($message);
-        
-    }
+;    }
 }

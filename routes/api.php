@@ -17,6 +17,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('contacts', 'API\ContactController@getContacts');
-Route::get('messages/{id}', 'API\ContactController@getMessages');
-Route::post('messages/saveMessage', 'API\ContactController@saveMessage');
+Route::get('contacts/fetchContacts', 'API\ContactController@fetchContacts');
+Route::get('messages/fetchMessages/{id}', 'API\ContactController@fetchMessages');
+Route::post('messages/send', 'API\ContactController@sendMessage');

@@ -83,6 +83,7 @@
                 <div class="title m-b-md">
                     Laravel
                 </div>
+                <p>Login to this site to go to the app.</p>
 
                 <div class="links">
                     <a href="https://laravel.com/docs">Docs</a>

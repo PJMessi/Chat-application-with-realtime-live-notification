@@ -11,6 +11,6 @@
 |
 */
 
-Broadcast::channel('messages_{id}', function ($user, $id) {
+Broadcast::channel('message_{id}', function ($user, $id) {
     return $user->id === (int) $id;
 });
